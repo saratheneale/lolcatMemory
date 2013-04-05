@@ -8,12 +8,17 @@ var urlNum = Math.floor(Math.random()*(1250-900+1)+900);
 //Concatenate to lolcat URL
 var url = "http://lolcat.com/images/lolcats/"+urlNum+".jpg";
 
-//Stick it in an array
+//Stick it in an array twice
 gameArray.push(url);
 gameArray.push(url);
 }//end for 
 //TODO: Randomize array
-
+for(var x = gameArray.length-1;x>0;x--){
+	var j=Math.floor(Math.random()*(x+1));
+	var temp = gameArray[x];
+	gameArray[x]=gameArray[j];
+	gameArray[j]=temp;
+}
 //draw our table
 var tableElem=document.createElement("table");
 //create 4 rows
@@ -44,38 +49,51 @@ for(i =0; i<4;i++){
 document.body.appendChild(tableElem);
 
 
-/*//iterate through array and display each image
-for(i=0;i<gameArray.length;i++){
-	//print to webpage
-	var tableElement =document.getElementById(i+1); 
-	var imgElement = document.createElement("img");
-	imgElement.setAttribute("src","https://s.chzbgr.com/s/release_20130329.3/img/site_banners/banner-1.png");
-	tableElement.appendChild(imgElement);
-}*/
-
 //event handler
 function clickTile(){
-	console.log("in clickTile")
-	var self=this;
-	var tileID=self.id;
+	//we only want two flipped at a time
+	if(document.getElementsByClassName("flipped").length<2){
 
-	var imgFlip = document.createElement("img");
-	imgFlip.setAttribute("src",gameArray[tileID]);
-	imgFlip.setAttribute("width",250);
-	imgFlip.setAttribute("class","flipped");
-	self.setAttribute("class","hidden");
-	self.style.display='none';
-	self.parentNode.appendChild(imgFlip);
-	
-	//if no other class "flipped," keep open.
-	var flipped = document.getElementsByClassName("flipped");
-	if (flipped.length>1){
-		checkMatched(flipped);
-	} 
-	//if there is another class "flipped", 
-	//flip back over in 3 seconds
+		console.log("in clickTile")
+		var self=this;
+		var tileID=self.id;
+		//if an img element that matches tileID already exists, we need to modify its
+		//display to "". Otherwise we need create the img element.
+		//if next/prev sibling is img with src===gameArray[tileID], then set display to ""
+		//we need to check if this element was previous flipped. if so, there is already an img element created.
+		var next = self.nextElementSibling;
+		var prev = self.previousElementSibling;
+		if(next!=null){
+			if(next.src===gameArray[tileID]){
+				next.style.display="";
+				next.setAttribute("class","flipped")
+			}
 
+		}
+		else if(prev!=null){
+			if(prev.src===gameArray[tileID]){
+				prev.style.display="";
+				prev.setAttribute("class","flipped")
+			}
+		}
+		else{
+			//create img tag for this flipped element
 
+			var imgFlip = document.createElement("img");
+			imgFlip.setAttribute("src",gameArray[tileID]);
+			imgFlip.setAttribute("width",250);
+			imgFlip.setAttribute("class","flipped");
+			
+			self.parentNode.appendChild(imgFlip);
+			}
+		self.setAttribute("class","hidden");
+		self.style.display='none';
+		//if no other class "flipped," keep open.
+		var flipped = document.getElementsByClassName("flipped");
+		if (flipped.length>1){
+			checkMatched(flipped);
+		} 
+	}//end if flipped<2
 }//end clickTile
 
 //takes an array of elements with class "flipped" 
@@ -86,13 +104,17 @@ function checkMatched(arr){
 	if(arr[0].getAttribute("src")===arr[1].getAttribute("src"))
 	{
 		while(arr.length>0){
-			arr[0].setAttribute("class","matched");}
+			arr[0].setAttribute("class","matched");
+		}
+		//TODO match celebratory
+		//scoreboard? confetti?
 	}
 	else{
 		//flip 'em back over
 		//arr is a live node list, so we need to make sure not to change class name 
         //until we are done
-
+        //BUG sometimes previous elementsibling sets wrong img tag with tile.
+        //previous elementsibling isn't reliable. can we do this by id?
 			setTimeout(function(){
 				while(arr.length>0){
 					arr[0].style.display='none';
