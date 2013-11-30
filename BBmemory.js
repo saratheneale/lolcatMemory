@@ -21,6 +21,11 @@ var CardView = Backbone.View.extend({
 				return this;
 			},
 	flipCard:   function(){
+				//1. Is this the only flipped card?
+
+				//2. Is this a match to the other flipped card?
+				//2a. Yes- trigger match function
+				//2b. No - rerender this view and the other card. 
 				var temp1=_.template($('#flip_card_template').html());
 				var obj ={model:this.model.toJSON()}
 				//show the card
@@ -37,6 +42,9 @@ var CardView = Backbone.View.extend({
 pairsOfCards = 6;
 MemoryAppView = Backbone.View.extend({
 
+	events:{
+		"click .card_wrap":'flipCard'
+	},
 	initialize:function(){
 		this.cards = new CardsCollection();
 		//Create 6 pairs of cards and add to collection
@@ -68,7 +76,7 @@ MemoryAppView = Backbone.View.extend({
 		// $('#BBVersion').append(cardView.render().$el);
 	},
 	render:function(){
-		this.$el.html("SUP");
+		
 		this.renderCardView();
 
 		return this;
@@ -78,9 +86,21 @@ MemoryAppView = Backbone.View.extend({
 			cardView = new CardView({model:item});
 			$('#card_grid').append(cardView.render().el)
 		})
+	},
+	flipCard:function(){
+		alert("I bubbled up")
+	},
+	matched:function(){
+		//confetti or something
+
+	},
+	notMatched:function(){
+		//re-render flipped cards
 	}
 
 })
+
+//Create the Application
 
  var memoryAppView = new MemoryAppView();
  $('#BBVersion').append(memoryAppView.render().el)
