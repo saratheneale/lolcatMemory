@@ -3,12 +3,18 @@
 <head>
 <title>Lily and Sara's Memory Game</title>
 <style>
+	body{
+		background-image:url('img/tree_bark.png');
+		text-align:center;
+
+	}
 	#BBVersion{
 		text-align:center;
 	}
 	#card_grid{
-		display:table-cell;	
-		width:950px;
+			
+		width:1250px;
+		margin:auto;
 	}
 	#card_grid .card_wrap{
 		display:inline-block;
@@ -16,11 +22,12 @@
 		position:relative;
 		width:300px;
 		height:300px;
-		background-color: teal;
+		background-image:url('img/tweed.png');
+		border: 1px solid #383535;
 		color:white;
 		font-size:14px;
 		text-align:center;
-		border:1px solid white;
+		margin:3px;
 	}
 	.card_wrap .unflipped_card{
 		position:absolute;
@@ -36,17 +43,18 @@
 		left:0;
 		background-size:contain;
 		background-repeat: no-repeat;
+		background-position:center;
 	}
 </style>
 </head>
 <body>
-<h1>Lily and Sara's Memory Game</h1>
+<h1>Lol-cat Memory with Backbone.js</h1>
 <div id="BBVersion">
 	<div id="card_grid">
 
 	</div>
 </div>
-Hopefully images appear here eventually.
+
 
 <table>
 
@@ -58,7 +66,7 @@ Hopefully images appear here eventually.
 </script>
 <script type = "text/template" id="flip_card_template">
 	<div class="flipped_card" style="background-image:url('<%=model.url%>')">
-	rawr
+	
 	</div>
 </script>
 <script type="text/javascript"src="memory.js"></script>
