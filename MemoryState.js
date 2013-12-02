@@ -55,7 +55,7 @@ var oneFlippedState = BaseState.extend({
 	},
 	exit:function(){
 		if (this.card)
-			this.card.render();
+			//this.card.render();
 			console.log('exit oneFlippedState')
 	},
 	oneFlip:function(card){
@@ -86,15 +86,26 @@ var twoFlippedState = BaseState.extend({
   }
 });
 
+//This Model depends on global var pairsOfCards
 var matchedState = BaseState.extend({
+	matches:[],
 	enter:function(){
 		console.log('enter in matchedState');
 	},
-	execute:function(){
-		console.log('executing matchedState');
+	execute:function(card){
+		console.log('executing matchedState: set the matched card...');
+		this.matches.push(card);
+		//if matched length is 6, winner. otherwise, noflip.
+		if(this.matches.length===pairsOfCards)
+			this.win();
+		else
+			this.noFlip();
+		//this.exit(); exiting should be done from the state. All evalutation code should go here. 
+
 	},
 	exit:function(){
 		console.log('exit matched')
+
 	},
 	match:function(){
 	  	console.log('already in state matched...');
