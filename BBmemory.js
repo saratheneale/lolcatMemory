@@ -36,17 +36,37 @@ var CardView = Backbone.View.extend({
 
 				
 				if (memoryAppView.state === memoryAppView.states.oneFlipped){
-					//go to matched or unmatched.
 					//1. Check if memoryAppView.states.oneFlipped.card is this.match
-					console.log("Is it a match?");
-					memoryAppView.changeState(memoryAppView.states.notMatched); //exit of oneFlipp will re-render that card.
-					this.render()//will re-render the view to noFlip
-					//2. Set status accordingly, and render proper view. 
+					//2. Set status accordingly, and render proper view.
+					if (this.isMatch()){
+						memoryAppView.changeState(memoryAppView.states.matched,this);
+						//TODO: confetti view! 
+					}
+					else{
+						
+						var that=this
+						setTimeout(function(){
+							memoryAppView.states.oneFlipped.card.render() //re-render that card.
+							that.render()//will re-render the view to noFlip
+
+							memoryAppView.changeState(memoryAppView.states.notMatched);
+							
+						},2000)
+						
+						 
+					}
 				}
 				else {
 					memoryAppView.changeState(memoryAppView.states.oneFlipped,this);
 				}
 
+	},
+	isMatch:function(){
+		var card1 = memoryAppView.states.oneFlipped.card.model;
+		var card2 = this.model;
+		if(card1.get('card_id') === card2.get('MatchNum'))
+			return true;
+		return false;
 	}
 });
   
