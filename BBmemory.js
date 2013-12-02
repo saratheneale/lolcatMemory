@@ -15,12 +15,13 @@ var CardView = Backbone.View.extend({
 		"click":'flipCard'
 	},
 	render:    function(){
+				this.$el.html("")
 				var temp1=_.template(this.template);
 				var obj = {nouns:'Kittens'}
 				this.$el.append(_.template(this.template)({nouns:'Kittens'}));
 				return this;
 			},
-	flipCard:   function(){
+	flipCard:  function(){
 				//1. Is this the only flipped card?
 
 				//2. Is this a match to the other flipped card?
@@ -30,9 +31,21 @@ var CardView = Backbone.View.extend({
 				var obj ={model:this.model.toJSON()}
 				//show the card
 				this.$el.html("")
-				this.$el.append(
-					temp1(obj)
-					);
+				this.$el.append(temp1(obj));
+				
+
+				
+				if (memoryAppView.state === memoryAppView.states.oneFlipped){
+					//go to matched or unmatched.
+					//1. Check if memoryAppView.states.oneFlipped.card is this.match
+					console.log("Is it a match?");
+					memoryAppView.changeState(memoryAppView.states.notMatched); //exit of oneFlipp will re-render that card.
+					this.render()//will re-render the view to noFlip
+					//2. Set status accordingly, and render proper view. 
+				}
+				else {
+					memoryAppView.changeState(memoryAppView.states.oneFlipped,this);
+				}
 
 	}
 });
@@ -72,8 +85,39 @@ MemoryAppView = Backbone.View.extend({
 		//Shuffle the collection
 		this.cards.reset(this.cards.shuffle(), {silent:true})
 		
-		// var cardView = new CardView();
-		// $('#BBVersion').append(cardView.render().$el);
+		//Set up the game States:
+		// oneFlipped
+		// matched
+		// notMatched
+		// noFlipped
+		// winner
+		this.states = {};
+	    this.states.oneFlipped = new oneFlippedState(this);
+	   // this.states.twoFlipped = new oneFlippedState(this);
+	    this.states.matched = new  matchedState(this);
+	    this.states.notMatched = new notMatchedState(this);
+	    this.states.noFlipped = new noFlipState(this);
+	    this.states.winner = new winnerState(this);
+	    this.changeState(this.states.noFlipped);
+
+
+	},
+	//args is optional.
+	changeState: function(state, args) {
+		//Make sure the current state wasn't passed in.
+		if (this.state !== state){
+			//1. Exit current state.
+			if (this.state){
+				this.state.exit();
+			}
+			//2. Set current state.
+			this.state = state;
+
+			//3. Enter and execute state.
+			this.state.enter(args);
+			this.state.execute(args);
+		}
+
 	},
 	render:function(){
 		
