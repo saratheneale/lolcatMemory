@@ -150,6 +150,12 @@ var winnerState = BaseState.extend({
 	},
 	execute:function(){
 		console.log('executing winnerState');
+		//Send Data to Keen
+
+		var winstate = {
+			winner: "true"
+		}
+		Keen.addEvent('Lolcat-MemoryWinner', winstate)
 	},
 	exit:function(){
 		console.log('exit winnerState')

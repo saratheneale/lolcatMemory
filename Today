@@ -1,0 +1,17 @@
+Today
+
+accomplished timing of unmatched flip.
+successfully navigate matched, unmatched, winner states. oneFlipped state needs detailing.
+Check for winner. 
+
+Bugs
+- click too fast, things are unstable. Turn off events when processing. 
+- Got a mismatched pair. Not sure if this is clicking too fast or if I need to destroy the card in oneFlipped on exit. If I destroy that card, where will I store its data in the meantime?
+
+Next
+-Work click too fast
+-polish oneFlipped state. 
+- Confetti
+- memoryAppView should know when it has a winner and pop up congrats
+- maybe make flipped cards have tranparent tile?, animate them in?
+Figure out how to push to gh-pages branch. ergh. 
