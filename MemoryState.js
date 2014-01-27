@@ -134,7 +134,7 @@ var noFlipState = BaseState.extend({
 		console.log('enter in noFlipState');
 	},
 	execute:function(){
-		console.log('executing noFlipState');
+		//console.log('executing noFlipState');
 	},
 	exit:function(){
 		console.log('exit noFlipState')
@@ -149,12 +149,22 @@ var winnerState = BaseState.extend({
 		console.log('enter in winnerState');
 	},
 	execute:function(){
-		console.log('executing winnerState');
+		//console.log('executing winnerState');
 		//Send Data to Keen
-
+        var cookieData = $.cookie("Lol-Cat_Memory_cookie");
+		var now =new Date().getTime()/1000;
+		var length = now - cookieData["session_start_time"];
+		debugger
+		console.log("Length is "+length)
+		if(isNaN(length) || length < 0)
+			length = -1;
 		var winstate = {
-			winner: "true"
+			winner: "true",
+			game_length: length,
+			session_id: $.cookie("Lol-Cat_Memory_cookie")["id"]
 		}
+		debugger;
+		console.log(winstate)
 		Keen.addEvent('Lolcat-MemoryWinner', winstate)
 	},
 	exit:function(){
