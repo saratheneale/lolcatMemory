@@ -161,7 +161,8 @@ var winnerState = BaseState.extend({
 		var winstate = {
 			winner: "true",
 			game_length: length,
-			session_id: $.cookie("Lol-Cat_Memory_cookie")["id"]
+			session_id: $.cookie("Lol-Cat_Memory_cookie")["id"],
+			permanent_id: $.cookie("Lol-Cat_Memory__permanent_cookie")["id"]
 		}
 		debugger;
 		console.log(winstate)
