@@ -9,7 +9,22 @@ var CardsCollection = Backbone.Collection.extend({
 	url: "https://api.thecatapi.com/v1/images/search?limit=6&page=1&order=Desc",
 	parse: function(response){
 		//todo create pairs. 
-		return response;
+		var newResponses = [];
+		response.forEach(function(card, i){
+			//add a copy to response. 
+			card.MatchNum = i;
+			card.card_id = i+5;
+			var newCard = JSON.parse(JSON.stringify(card));
+			newCard.MatchNum = i+5;
+			newCard.card_id = i;
+			newCard.id = newCard.id+"2";
+			newResponses.push(newCard);
+
+		});
+		// console.log(newResponses)
+		var newOne = response.concat(newResponses);
+		console.log(newOne)
+		return newOne;
 	}
 
 })
@@ -88,11 +103,16 @@ MemoryAppView = Backbone.View.extend({
 		var newUrl = "https://api.thecatapi.com/v1/images/search?limit=6&page=1&order=Desc";
 		this.cards = new CardsCollection();
 		var self = this;
-		this.cards.fetch({success: function(){
-			console.log("I succeeded!")
-			// try renderCardView? 
-			self.renderCardView();
-		}});
+		this.cards.fetch({
+			success: function(){
+				console.log("I succeeded!");
+				self.cards.reset(self.cards.shuffle(), {silent:false})
+
+				// try renderCardView? 
+				self.render();
+			},
+			reset: true
+	});
 		//Create 6 pairs of cards and add to collection
 		// for(i = 0; i < pairsOfCards; i++){
 		// 	//Generate a random number between 900 and 1250
@@ -116,7 +136,7 @@ MemoryAppView = Backbone.View.extend({
 		// }
 
 		//Shuffle the collection
-		this.cards.reset(this.cards.shuffle(), {silent:true})
+		// this.cards.reset(this.cards.shuffle(), {silent:true})
 
 		//Set up the game States:
 		// oneFlipped
