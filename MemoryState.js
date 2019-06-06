@@ -154,7 +154,6 @@ var winnerState = BaseState.extend({
         var cookieData = $.cookie("Lol-Cat_Memory_cookie");
 		var now =new Date().getTime()/1000;
 		var length = now - cookieData["session_start_time"];
-		debugger
 		console.log("Length is "+length)
 		if(isNaN(length) || length < 0)
 			length = -1;
@@ -164,9 +163,8 @@ var winnerState = BaseState.extend({
 			session_id: $.cookie("Lol-Cat_Memory_cookie")["id"],
 			permanent_id: $.cookie("Lol-Cat_Memory__permanent_cookie")["id"]
 		}
-		debugger;
 		console.log(winstate)
-		Keen.addEvent('Lolcat-MemoryWinner', winstate)
+		// Keen.addEvent('Lolcat-MemoryWinner', winstate)
 	},
 	exit:function(){
 		console.log('exit winnerState')
