@@ -8,7 +8,7 @@ var CardsCollection = Backbone.Collection.extend({
 	model:CardModel,
 	url: "https://api.thecatapi.com/v1/images/search?limit=6&page=1&order=Desc",
 	parse: function(response){
-		//todo create pairs. 
+		//Create pairs. 
 		var newResponses = [];
 		response.forEach(function(card, i){
 			//add a copy to response. 
@@ -21,9 +21,7 @@ var CardsCollection = Backbone.Collection.extend({
 			newResponses.push(newCard);
 
 		});
-		// console.log(newResponses)
 		var newOne = response.concat(newResponses);
-		console.log(newOne)
 		return newOne;
 	}
 
@@ -113,31 +111,7 @@ MemoryAppView = Backbone.View.extend({
 			},
 			reset: true
 	});
-		//Create 6 pairs of cards and add to collection
-		// for(i = 0; i < pairsOfCards; i++){
-		// 	//Generate a random number between 900 and 1250
-		// 	var urlNum = Math.floor(Math.random()*(1250-900+1)+900);
-		// 	//Concatenate to lolcat URL
-		// 	var url = "http://lolcat.com/images/lolcats/"+urlNum+".jpg";
-		// 	//Create Models and add to Collection
-		// 	var card1 = new CardModel({
-		// 		urlNum:urlNum,
-		// 		url:url,
-		// 		MatchNum:i+5,
-		// 		card_id:i
-		// 	});
-		// 	var card2 = new CardModel({
-		// 		urlNum:urlNum,
-		// 		url:url,
-		// 		MatchNum:i,
-		// 		card_id:i+5
-		// 		});
-		// 	this.cards.add([card1,card2]);
-		// }
-
-		//Shuffle the collection
-		// this.cards.reset(this.cards.shuffle(), {silent:true})
-
+		
 		//Set up the game States:
 		// oneFlipped
 		// matched
@@ -180,7 +154,6 @@ MemoryAppView = Backbone.View.extend({
 	},
 	renderCardView:function(){
 		this.cards.forEach(function(item){
-			console.log("Rendering")
 			cardView = new CardView({model:item});
 			$('#card_grid').append(cardView.render().el)
 		})
