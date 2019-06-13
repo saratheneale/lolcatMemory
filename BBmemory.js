@@ -14,7 +14,9 @@ var CardsCollection = Backbone.Collection.extend({
 			//add a copy to response. 
 			card.MatchNum = i;
 			card.card_id = i+5;
-			var newCard = JSON.parse(JSON.stringify(card));
+			// var newCard = JSON.parse(JSON.stringify(card));
+			var newCard = {...card};
+
 			newCard.MatchNum = i+5;
 			newCard.card_id = i;
 			newCard.id = newCard.id+"2";
@@ -131,6 +133,9 @@ MemoryAppView = Backbone.View.extend({
 	},
 	//args is optional.
 	changeState: function(state, args) {
+		var callback = function(args){
+			console.log("hello i'm a callback")
+		}
 		//Make sure the current state wasn't passed in.
 		if (this.state !== state){
 			//1. Exit current state.
@@ -142,7 +147,7 @@ MemoryAppView = Backbone.View.extend({
 
 			//3. Enter and execute state.
 			this.state.enter(args);
-			this.state.execute(args);
+			this.state.execute(args, callback);
 		}
 
 	},
