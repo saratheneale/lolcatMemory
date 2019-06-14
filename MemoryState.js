@@ -92,12 +92,16 @@ var matchedState = BaseState.extend({
 	enter:function(){
 		console.log('enter in matchedState');
 	},
-	execute:function(card){
+	execute:function(card, callback){
 		console.log('executing matchedState: set the matched card...');
 		this.matches.push(card);
 		//if matched length is 6, winner. otherwise, noflip.
-		if(this.matches.length===pairsOfCards)
+		if(this.matches.length===pairsOfCards){
 			this.win();
+			if (callback) {
+				callback({win: true});
+			}
+		}
 		else
 			this.noFlip();
 		//this.exit(); exiting should be done from the state. All evalutation code should go here. 
