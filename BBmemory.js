@@ -14,7 +14,8 @@ var CardsCollection = Backbone.Collection.extend({
 			//add a copy to response. 
 			card.MatchNum = i;
 			card.card_id = i+5;
-			var newCard = JSON.parse(JSON.stringify(card));
+			var newCard = {...card};
+
 			newCard.MatchNum = i+5;
 			newCard.card_id = i;
 			newCard.id = newCard.id+"2";
@@ -26,6 +27,68 @@ var CardsCollection = Backbone.Collection.extend({
 	}
 
 })
+
+var ConfettiView = Backbone.View.extend({
+	className: "wrapper",
+	render: function(){
+		this.$el.html("<div>SUCH WIN WOWZA</div>");
+		return this;
+	},
+
+	afterRender: function(){
+		var self = this;
+		// Thank you for confetti, CAPTAIN ANONYMOUS https://codepen.io/anon/pen/JMOQzE
+		for (var i = 0; i < 250; i++) {
+		  create(i);
+		}
+
+		function create(i) {
+		  var width = Math.random() * 28;
+		  var height = width * 0.4;
+		  var colourIdx = Math.ceil(Math.random() * 3);
+		  var colour = "red";
+		  switch(colourIdx) {
+		    case 1:
+		      colour = "yellow";
+		      break;
+		    case 2:
+		      colour = "blue";
+		      break;
+		    default:
+		      colour = "red";
+		  }
+		  self.$el.append($('<div class="confetti-'+i+' '+colour+'"></div>').css({
+		    "width" : width+"px",
+		    "height" : height+"px",
+		    "top" : -Math.random()*20+"%",
+		    "left" : Math.random()*100+"%",
+		    "opacity" : Math.random()+0.5,
+		    "transform" : "rotate("+Math.random()*360+"deg)"
+		  }))
+		  
+		  drop(i);
+		}
+
+		function drop(x) {
+		  $('.confetti-'+x).animate({
+		    top: "100%",
+		    left: "+="+Math.random()*15+"%"
+		  }, Math.random()*3000 + 3000, function() {
+		    reset(x);
+		  });
+		}
+
+		function reset(x) {
+		  $('.confetti-'+x).animate({
+		    "top" : -Math.random()*20+"%",
+		    "left" : "-="+Math.random()*15+"%"
+		  }, 0, function() {
+		    drop(x);             
+		  });
+		}
+	}
+})
+
 var CardView = Backbone.View.extend({
 	className: "card_wrap",
 	template:  $('#start_card_template').html(),
@@ -121,7 +184,7 @@ MemoryAppView = Backbone.View.extend({
 		this.states = {};
 	    this.states.oneFlipped = new oneFlippedState(this);
 	   // this.states.twoFlipped = new oneFlippedState(this);
-	    this.states.matched = new  matchedState(this);
+	    this.states.matched = new matchedState(this);
 	    this.states.notMatched = new notMatchedState(this);
 	    this.states.noFlipped = new noFlipState(this);
 	    this.states.winner = new winnerState(this);
@@ -131,6 +194,14 @@ MemoryAppView = Backbone.View.extend({
 	},
 	//args is optional.
 	changeState: function(state, args) {
+		var callback = function(args2){
+			if (args2.win){
+				var confettiView = new ConfettiView();
+				var stuff = confettiView.render()
+				$("#BBVersion").append(stuff.el)
+				confettiView.afterRender();
+			}
+		}
 		//Make sure the current state wasn't passed in.
 		if (this.state !== state){
 			//1. Exit current state.
@@ -142,7 +213,7 @@ MemoryAppView = Backbone.View.extend({
 
 			//3. Enter and execute state.
 			this.state.enter(args);
-			this.state.execute(args);
+			this.state.execute(args, callback);
 		}
 
 	},
