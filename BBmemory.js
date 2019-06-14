@@ -14,7 +14,6 @@ var CardsCollection = Backbone.Collection.extend({
 			//add a copy to response. 
 			card.MatchNum = i;
 			card.card_id = i+5;
-			// var newCard = JSON.parse(JSON.stringify(card));
 			var newCard = {...card};
 
 			newCard.MatchNum = i+5;
@@ -31,13 +30,8 @@ var CardsCollection = Backbone.Collection.extend({
 
 var ConfettiView = Backbone.View.extend({
 	className: "wrapper",
-	initialize: function(){
-		console.log("initialize");
-		
-	},
 	render: function(){
-		this.$el.html("<div>YOU WON CONGRAYS</div>");
-		console.log("renderize");
+		this.$el.html("<div>SUCH WIN WOWZA</div>");
 		return this;
 	},
 
@@ -201,9 +195,7 @@ MemoryAppView = Backbone.View.extend({
 	//args is optional.
 	changeState: function(state, args) {
 		var callback = function(args2){
-			console.log("hello i'm a callback")
 			if (args2.win){
-				console.log("hello i can tell you won from the callback. ")
 				var confettiView = new ConfettiView();
 				var stuff = confettiView.render()
 				$("#BBVersion").append(stuff.el)
